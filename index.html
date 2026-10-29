@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIJA DASHBOARD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-obsidian: #090B0E;
+      --surface-elevation-1: #11151C;
+      --surface-elevation-2: #1A202C;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --accent-gold: #D4AF37;
+      --accent-gold-hover: #E6C547;
+      --accent-crimson: #EF4444;
+      --text-primary: #F3F4F6;
+      --text-secondary: #9CA3AF;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background-color: var(--bg-obsidian);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      overflow-x: clip;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: linear-gradient(var(--border-subtle) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.25;
+      z-index: -1;
+    }
+
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 24px;
+      margin-bottom: 40px;
+    }
+
+    .masthead-title h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    .masthead-title p {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: var(--surface-elevation-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 28px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .panel-title {
+      font-size: 0.9375rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--surface-elevation-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-size: 0.9375rem;
+      font-family: var(--font-sans);
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--accent-gold);
+      color: #090B0E;
+      border: none;
+      border-radius: 6px;
+      padding: 14px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-gold-hover);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .btn-danger {
+      background: transparent;
+      color: var(--accent-crimson);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--accent-crimson);
+    }
+
+    .btn-danger-all {
+      width: 100%;
+      background: rgba(239, 68, 68, 0.08);
+      color: var(--accent-crimson);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 24px;
+    }
+
+    .btn-danger-all:hover {
+      background: var(--accent-crimson);
+      color: #fff;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.875rem;
+    }
+
+    .data-table th {
+      background: var(--surface-elevation-2);
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .data-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .data-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px 0;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="masthead-title">
+        <h1>SIJA KELAS XI - Data Ledger</h1>
+        <p>Secure Institutional Records & Local Storage Persistence Engine</p>
+      </div>
+    </header>
+
+    <div class="dashboard-grid">
+      <!-- Panel 1: Form Input -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>Input Entri Siswa</span>
+        </div>
+        <form id="studentForm">
+          <div class="form-group">
+            <label class="form-label" for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" class="form-input" placeholder="Wafi XYZ" required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="kelas">Kelas</label>
+            <input type="text" id="kelas" class="form-input" placeholder="XI SIJA A" required autocomplete="off">
+          </div>
+
+          <button type="submit" class="btn-primary">Simpan Data</button>
+        </form>
+      </div>
+
+      <!-- Panel 2: Table Data -->
+      <div class="panel">
+        <div class="panel-title">
+          <span>Daftar Data Tersimpan</span>
+          <span id="recordCount">0 Entri</span>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 60px">No</th>
+                <th>Nama</th>
+                <th>Kelas</th>
+                <th style="width: 100px; text-align: right;">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="studentTableBody">
+              <!-- Data akan diisi oleh JS -->
+            </tbody>
+          </table>
+        </div>
+        <button id="clearAllBtn" class="btn-danger-all">Hapus Semua Data</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const studentForm = document.getElementById('studentForm');
+    const studentTableBody = document.getElementById('studentTableBody');
+    const recordCount = document.getElementById('recordCount');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    let students = JSON.parse(localStorage.getItem('sija_students')) || [];
+
+    function renderTable() {
+      studentTableBody.innerHTML = '';
+      recordCount.textContent = `${students.length} Entri`;
+
+      if (students.length === 0) {
+        studentTableBody.innerHTML = `
+          <tr>
+            <td colspan="4" class="empty-state">Belum ada data tersimpan.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      students.forEach((student, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${student.nama}</td>
+          <td>${student.kelas}</td>
+          <td style="text-align: right;">
+            <button class="btn-danger" onclick="deleteStudent(${index})">Hapus</button>
+          </td>
+        `;
+        studentTableBody.appendChild(row);
+      });
+    }
+
+    studentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nama = document.getElementById('nama').value;
+      const kelas = document.getElementById('kelas').value;
+
+      students.push({ nama, kelas });
+      localStorage.setItem('sija_students', JSON.stringify(students));
+      
+      studentForm.reset();
+      renderTable();
+    });
+
+    function deleteStudent(index) {
+      students.splice(index, 1);
+      localStorage.setItem('sija_students', JSON.stringify(students));
+      renderTable();
+    }
+
+    clearAllBtn.addEventListener('click', () => {
+      if (students.length > 0 && confirm('Apakah Anda yakin ingin menghapus seluruh data?')) {
+        students = [];
+        localStorage.removeItem('sija_students');
+        renderTable();
+      }
+    });
+
+    // Render awal saat halaman dimuat
+    renderTable();
+  </script>
+</body>
+</html>
